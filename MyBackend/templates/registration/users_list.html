@@ -11,6 +11,35 @@
     th { background:#eef3fb; font-weight:700; }
     tr:hover td { background:#fbfdff; }
     a.button { padding:8px 12px; background:#2b6cb0; color:white; border-radius:6px; text-decoration:none; }
+
+    a.action-button {
+        padding: 6px 10px;
+        margin-right: 5px; 
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        display: inline-block;
+        transition: background-color 0.2s ease;
+    }
+    
+    a.edit-button {
+        background: #005eff; 
+        color: white;
+    }
+    
+    a.edit-button:hover {
+        background: #004ecc;
+    }
+    
+    a.delete-button {
+        background: #c53030; 
+        color: white;
+    }
+    
+    a.delete-button:hover {
+        background: #9b2c2c;
+    }
   </style>
 </head>
 <body>
@@ -22,26 +51,50 @@
     </div>
   </div>
 
+  <div style="padding-bottom: 10px;">
+    <a href="{% url 'registration:user_create_html' %}" class="button">Add New User</a>
+  </div>
+
   <table>
     <thead>
       <tr>
         <th>#</th>
+        <th>Profile Picture</th>
         <th>First name</th>
         <th>Last name</th>
         <th>Email</th>
         <th>Gender</th>
         <th>Date registered</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       {% for u in users %}
       <tr>
         <td>{{ forloop.counter }}</td>
+
+        <td>
+          {% if u.profile_picture %}
+            <img src="{{ u.profile_picture.url }}" 
+            alt="Profile Picture" 
+            width="80" height="80" 
+            style="object-fit:cover; border-radius:50%;" />
+          {% else %}
+            <span>No Image</span>
+          {% endif %}
+        </td>
+
         <td>{{ u.first_name }}</td>
         <td>{{ u.last_name }}</td>
         <td>{{ u.email }}</td>
         <td>{{ u.gender|default:"N/A" }}</td>
         <td>{{ u.date_registered|date:"Y-m-d H:i" }}</td>
+
+        <td>
+          <a href="{% url 'registration:user_update_html' u.id %}" class="action-button edit-button">Edit</a>
+          <a href="{% url 'registration:user_delete_html' u.id %}" class="action-button delete-button">Delete</a>
+        </td>
+
       </tr>
       {% empty %}
       <tr><td colspan="6">No users yet.</td></tr>
